@@ -1,47 +1,47 @@
 let color = '#3aa757';
+const MAIN_MENU_ID = 'DewwowMenuId';
 
 chrome.runtime.onInstalled.addListener(() => {
   console.log('Default background color set to %cgreen', `color: ${color}`);
   chrome.storage.sync.set({ color });
-
-  setInterval(interval, 3000);
 });
 
-function interval() {
-  console.log('dewwow interval start');
-  getCurrentTab().then((t) => {
-    if (t) {
-      if (t.status === 'complete' && t.active === true) {
-        console.log(t.url);
-        if (t.url.includes('.force.com/')) {
-          chrome.scripting.executeScript({
-            target: { tabId: t.id },
-            function: initDewwow,
-          });
-        }
-      }
-    }
-    
-  });
- 
-}
+// This is used to inject html into the Salesforce page when the screen loads. 
+// There are are probably going to times when this isn't good enough and I'll
+// need to look for url changes. 
+chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
+  if (changeInfo.status == 'complete' && tab.active) {
 
+    console.log(tab.url);
+    if (tab.url.includes('.force.com/')) {
+      chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: addMainMenuToSalesforcePage,
+        args: [ MAIN_MENU_ID ]
+      });
+    }
+  }
+
+});
+
+// Might be used in the future... if not I'll delete it.
 async function getCurrentTab() {
   let queryOptions = { active: true, currentWindow: true };
   let [tab] = await chrome.tabs.query(queryOptions);
   return tab;
 }
 
-function initDewwow() {
-  console.log('initDewwow start');
-  var dewwowMenu = document.getElementById('DewwowMenu');
-  if(dewwowMenu){
-    dewwowMenu.remove();
+function addMainMenuToSalesforcePage(menuId) {
+  console.log('addMainMenuToSalesforcePage start');
+  var dewwowMenu = document.getElementById(menuId);
+  if(!dewwowMenu){
+    dewwowMenu = document.createElement('li');
+    dewwowMenu.id = menuId;
+    dewwowMenu.innerText = 'Dewwow Menu';
+    dewwowMenu.class = 'slds-global-actions__item slds-dropdown-trigger slds-dropdown-trigger--click';
+    
+    // This adds an item to the global actions in the upper right corner.
+    document.getElementsByClassName('slds-global-actions')[0].appendChild(dewwowMenu);
+    console.log('addMainMenuToSalesforcePage end');
   }
-  dewwowMenu = document.createElement('li');
-  dewwowMenu.id = 'DewwowMenu';
-  dewwowMenu.innerText = 'Dewwow Menu';
-  dewwowMenu.class = 'slds-global-actions__item slds-dropdown-trigger slds-dropdown-trigger--click';
-  document.getElementsByClassName('slds-global-actions')[0].appendChild(dewwowMenu);
-  console.log('initDewwow end');
 }
