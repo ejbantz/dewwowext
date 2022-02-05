@@ -1,14 +1,26 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="button.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />        
   </head>
   <body>
-    <div id="buttonDiv">
-    </div>
-    <div>
-      <p>Choose a different background color!</p>
-    </div>
+    <select id="loginEnvironment">
+      <option value="Production">Production or Developer</option>
+      <option value="Sandbox">Sandbox</option>
+    </select>
+    <button id="authorizeButton" type="button" class="btn btn-primary btn-sm">Authorize</button>
+
+    <pre id="messageBox"></pre>
+
+
+
+  
+  <div id="content" ></div>
+      
   </body>
-  <script src="options.js"></script>
+  <script src="library/jquery-3.6.0.min.js"></script>
+  <script src="library/bootstrap.min.js"></script>
+  <script src="library/constants.js"></script>
+  <script src="library/utils.js"></script>
+  <script src="library/options.js"></script>
 </html>

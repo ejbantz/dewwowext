@@ -7,7 +7,7 @@
     "background": {
         "service_worker": "background.js"
     },
-    "permissions": ["tabs","storage", "activeTab", "scripting","cookies"],
+    "permissions": ["tabs","storage", "activeTab", "scripting","cookies","identity"],
     "host_permissions": ["https://*.salesforce.com/*","https://*.force.com/*"],
     "action": {
         "default_popup": "popup.html",

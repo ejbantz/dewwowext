@@ -37,7 +37,7 @@ function addMainMenuToSalesforcePage(menuId) {
   if(!dewwowMenu){
     dewwowMenu = document.createElement('li');
     dewwowMenu.id = menuId;
-    dewwowMenu.innerText = 'Dewwow Menu';
+    dewwowMenu.innerText = 'My Menu';
     dewwowMenu.class = 'slds-global-actions__item slds-dropdown-trigger slds-dropdown-trigger--click';
     
     // This adds an item to the global actions in the upper right corner.
