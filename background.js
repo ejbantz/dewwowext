@@ -1,10 +1,4 @@
-let color = '#3aa757';
 const MAIN_MENU_ID = 'DewwowMenuId';
-
-chrome.runtime.onInstalled.addListener(() => {
-  console.log('Default background color set to %cgreen', `color: ${color}`);
-  chrome.storage.sync.set({ color });
-});
 
 // This is used to inject html into the Salesforce page when the screen loads. 
 // There are are probably going to times when this isn't good enough and I'll
@@ -12,8 +6,14 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
   if (changeInfo.status == 'complete' && tab.active) {
 
-    console.log(tab.url);
+    // These could have been setup in the manifest but I prefer to inject
+    // them via code to have a bit more control.  This is demonstrating
+    // injecting both a file and function.
     if (tab.url.includes('.force.com/')) {
+      chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: ['library/dewwowext.js']
+      });
       chrome.scripting.executeScript({
         target: { tabId: tab.id },
         func: addMainMenuToSalesforcePage,
@@ -31,17 +31,31 @@ async function getCurrentTab() {
   return tab;
 }
 
+// Keep in mind that when a function is injected via chrome.scripting.executeScript
+// It is putting a copy of the script into the dom.  Because of this... the script 
+// needs to be self contained. 
 function addMainMenuToSalesforcePage(menuId) {
-  console.log('addMainMenuToSalesforcePage start');
   var dewwowMenu = document.getElementById(menuId);
   if(!dewwowMenu){
+    // Only add the menu if it doesn't already exist.   Sort of a pointless
+    // check... but I suppose if someone creates a second extension that happens
+    // to add ths same div tag id then bad things would happen.   Maybe the 
+    // the div id should be more of random thing... or make use the exensions unique id.
     dewwowMenu = document.createElement('li');
     dewwowMenu.id = menuId;
-    dewwowMenu.innerText = 'My Menu';
-    dewwowMenu.class = 'slds-global-actions__item slds-dropdown-trigger slds-dropdown-trigger--click';
+    dewwowMenu.innerText = 'Dewwow Menu';
+    dewwowMenu.className = 'dewwowext-menu slds-global-actions__item slds-dropdown-trigger slds-dropdown-trigger--click';
     
     // This adds an item to the global actions in the upper right corner.
-    document.getElementsByClassName('slds-global-actions')[0].appendChild(dewwowMenu);
-    console.log('addMainMenuToSalesforcePage end');
+    var parent = document.getElementsByClassName('slds-global-actions')[0];
+    if (parent) {
+      parent.appendChild(dewwowMenu);
+    
+      // Add a handler so we can do things when the user clicks the UI we added. 
+      dewwowMenu.addEventListener('click', function(e) {
+        // $DewwowExt is available because it as also injected. 
+        $DewwowExt.log('Menu button clicked.');
+      });
+    }
   }
 }

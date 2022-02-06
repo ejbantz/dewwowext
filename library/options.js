@@ -10,7 +10,7 @@ $(function(){
 	$('#authorizeButton').click(function(){
 		var loginEnvironment = $('#loginEnvironment').val();
 		var server;
-		// Only Production and Sandbox are implement.  Need to add Custom Domain at some point.
+		// Only Production and Sandbox are implemented.  Need to add Custom Domain at some point.
 		if (loginEnvironment == 'Production') {
 			server = 'https://login.salesforce.com';
 		} else {
@@ -37,11 +37,11 @@ $(function(){
 			},
 			function(response) {
 				let searchParams = new URLSearchParams(response.split('?')[1]);
-				// These are the two things we expect to receive.
+				// These are the two things we expect to receive.   We use the code to 
+				// to then fetch the actual authorization token. 
 				let state = searchParams.get('state');
 				let code = searchParams.get('code');
 
-			
 				var token_url = server + '/services/oauth2/token';
 				var body = ('grant_type=authorization_code&client_id='+encodeURIComponent($Constants.CLIENT_ID)
 						+'&redirect_uri='+encodeURIComponent(chrome.identity.getRedirectURL('callback.html'))
@@ -135,6 +135,7 @@ $(function(){
 						+'<td>'+sorted[i].userId+'</td>'
 						+'<td>'+(new Date(parseInt(sorted[i].issued_at))).toISOString()+'</td>'
 						+'<td><button class="btn-uinfo slds-button slds-button_neutral">test</button>'
+						+'<button class="btn-delete slds-button  slds-button_destructive">delete</button>'
 						+'<button class="btn-refresh slds-button  slds-button_destructive">refresh</button></td>'
 					+'</tr>');
 
@@ -168,8 +169,34 @@ $(function(){
 								if(err){
 									return setMessage('ERROR OCCURRED:\n'+JSON.stringify(err,null,2));
 								}
-								window.location.reload();
+								renderRefreshTokens();
 							});
+						});
+					});
+
+				//refresh token handler
+				tr.find('button.btn-delete')
+					.attr('data-user-id', sorted[i].userId)
+					.attr('data-org-id', sorted[i].orgId)
+					.click(function(){
+
+						var userId = $(this).attr('data-user-id');
+						var orgId = $(this).attr('data-org-id');
+
+						setMessage('Deleting...');
+
+						//searches for the tokens of the given user
+						return chrome.storage.local.get(['refresh_tokens'], function(params){
+
+							params = params || {};
+							params.refresh_tokens = params.refresh_tokens || {};
+
+							delete params.refresh_tokens[userId+'_'+orgId];
+							return chrome.storage.local.set(params, function(){
+								renderRefreshTokens();
+								setMessage(null);
+							});
+
 						});
 					});
 

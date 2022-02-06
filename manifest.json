@@ -9,6 +9,12 @@
     },
     "permissions": ["tabs","storage", "activeTab", "scripting","cookies","identity"],
     "host_permissions": ["https://*.salesforce.com/*","https://*.force.com/*"],
+    "content_scripts": [
+      {
+        "matches": ["https://*.salesforce.com/*","https://*.force.com/*"],
+        "css": ["css/dewwowext.css"]
+      }
+    ],
     "action": {
         "default_popup": "popup.html",
         "default_icon": {
