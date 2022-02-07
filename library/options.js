@@ -21,7 +21,7 @@ $(function(){
 		// https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_web_server_flow.htm&type=5
 		var auth_parameters = {
 			response_type: 'code',
-			client_id: $Constants.CLIENT_ID,
+			client_id: $DewwowExt.CLIENT_ID,
 			state: 'This is echoed back in the redirect',
 			immediate: false,
 			prompt: 'login',
@@ -43,7 +43,7 @@ $(function(){
 				let code = searchParams.get('code');
 
 				var token_url = server + '/services/oauth2/token';
-				var body = ('grant_type=authorization_code&client_id='+encodeURIComponent($Constants.CLIENT_ID)
+				var body = ('grant_type=authorization_code&client_id='+encodeURIComponent($DewwowExt.CLIENT_ID)
 						+'&redirect_uri='+encodeURIComponent(chrome.identity.getRedirectURL('callback.html'))
 						+'&code='+encodeURIComponent(code));
 				
