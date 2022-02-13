@@ -33,7 +33,7 @@
             if(code){
                 //web server flow
                 var url = state+'/services/oauth2/token';
-                var body = ('grant_type=authorization_code&client_id='+encodeURIComponent($Constants.CLIENT_ID)
+                var body = ('grant_type=authorization_code&client_id='+encodeURIComponent($DewwowExt.CLIENT_ID)
                         +'&redirect_uri='+encodeURIComponent('chrome-extension://'+chrome.runtime.id+'/options.html')
                         +'&code='+encodeURIComponent(code));
                 

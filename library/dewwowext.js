@@ -9,13 +9,14 @@
         // List of all of the messages you can send that are processed by the background.js
         MESSAGES: {
             GET_SESSION: 'GET_SESSION',
+            METADATA_RETRIEVE: 'METADATA_RETRIEVE',
         },
 
         //main Salesforce API level
         API_LEVEL: '52.0',
         
         //client ID from Salesforce connected app
-        CLIENT_ID: 'INSERT YOUR CLIENT ID HERE',
+        CLIENT_ID: 'YOUR-CLIENT-ID-HERE',
 
         isLightningExperience: function(url){
             if (url) {
@@ -141,6 +142,7 @@
                 'Authorization':'Bearer ' + sessionId
             };
 
+            console.log(`Fetching %c${_url}`, "color: blue");
             fetch(_url, {
                 method: 'get',
                 headers: _headers
@@ -151,8 +153,60 @@
                 
             });
 
-        }
+        },
 
+        startMetadataRetrieve: function( hostname, orgId, sessionId, callback) {
+            // Build the url to make metadata calls... which is a little different than plain data calls.
+            const _url = 'https://' + hostname + '/services/Soap/m/' + window.$DewwowExt.API_LEVEL;
+
+            // Metadata is via SOAP... you can't do much via REST.
+            // There probably soap clients that could be used... but I'm just going to do
+            // raw fetch requests for this.    For now this is just hard coding what metadata to request.
+            // nothing handles the response yet.
+            const _body = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:met="http://soap.sforce.com/2006/04/metadata">
+                                <soapenv:Header>
+                                <met:CallOptions>
+                                    <met:client>${window.$DewwowExt.CLIENT_ID}</met:client>
+                                </met:CallOptions>
+                                <met:SessionHeader>
+                                    <met:sessionId>${sessionId}</met:sessionId>
+                                </met:SessionHeader>
+                                </soapenv:Header>
+                                <soapenv:Body>
+                                <met:retrieve>
+                                    <met:retrieveRequest>
+                                        <met:apiVersion>${window.$DewwowExt.API_LEVEL}</met:apiVersion>
+                                        <met:singlePackage>true</met:singlePackage>
+                                        <met:unpackaged>
+                                            <met:fullName>DewwowExt</met:fullName>
+                                            <met:description>Used to download metadata.</met:description>
+                                            <met:types>
+                                            <met:members>Security</met:members>
+                                            <met:name>Settings</met:name>
+                                            </met:types>
+                                            <met:version>${window.$DewwowExt.API_LEVEL}</met:version>
+                                        </met:unpackaged>
+                                    </met:retrieveRequest>
+                                </met:retrieve>
+                                </soapenv:Body>
+                            </soapenv:Envelope>`;  
+         
+            fetch(_url, {
+                method: 'POST',
+                headers: {
+                    'SOAPAction':'retrieve',
+                    'Content-Type': 'text/xml'
+                },
+                body: _body
+            }).then(function (response){
+                response.text().then(function (data){
+                    // for now we're just passing back the response.  but we'll need to parse the xml here.
+                    callback( { status: response.status, data: data  });
+                });
+                
+            });
+
+        }
 
     };
 })();
