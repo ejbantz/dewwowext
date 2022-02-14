@@ -10,6 +10,8 @@
         MESSAGES: {
             GET_SESSION: 'GET_SESSION',
             METADATA_RETRIEVE: 'METADATA_RETRIEVE',
+            METADATA_CHECKRETRIEVESTATUS: 'METADATA_CHECKRETRIEVESTATUS',
+            UNZIP: 'UNZIP'
         },
 
         //main Salesforce API level
@@ -155,7 +157,7 @@
 
         },
 
-        startMetadataRetrieve: function( hostname, orgId, sessionId, callback) {
+        startMetadataRetrieve: function( hostname, sessionId, metaTypes, callback) {
             // Build the url to make metadata calls... which is a little different than plain data calls.
             const _url = 'https://' + hostname + '/services/Soap/m/' + window.$DewwowExt.API_LEVEL;
 
@@ -180,17 +182,19 @@
                                         <met:unpackaged>
                                             <met:fullName>DewwowExt</met:fullName>
                                             <met:description>Used to download metadata.</met:description>
-                                            <met:types>
-                                            <met:members>Security</met:members>
-                                            <met:name>Settings</met:name>
-                                            </met:types>
+                                            ${ metaTypes.map(function(item){
+                                                return `<met:types>
+                                                            <met:members>${item.members}</met:members>
+                                                            <met:name>${item.name}</met:name>
+                                                        </met:types>`;
+                                            }).join('')}
                                             <met:version>${window.$DewwowExt.API_LEVEL}</met:version>
                                         </met:unpackaged>
                                     </met:retrieveRequest>
                                 </met:retrieve>
                                 </soapenv:Body>
                             </soapenv:Envelope>`;  
-         
+            console.log(_body);
             fetch(_url, {
                 method: 'POST',
                 headers: {
@@ -200,13 +204,61 @@
                 body: _body
             }).then(function (response){
                 response.text().then(function (data){
-                    // for now we're just passing back the response.  but we'll need to parse the xml here.
+                    // Chrome extensions with manifest 3 no longer have an XML parser.  I could try to 
+                    // find some 3rd party library to parse it, but instead I'll just pass it back.
+                    // We'll just pass the raw xml back to the caller and let them parse it in the browser.
+                    callback( { status: response.status, data: data  });
+                });
+                
+            });
+
+        },
+
+        checkRetrieveStatus: function( hostname, sessionId, asyncProcessId, includeZip, callback) {
+            // Build the url to make metadata calls... which is a little different than plain data calls.
+            const _url = 'https://' + hostname + '/services/Soap/m/' + window.$DewwowExt.API_LEVEL;
+
+            // Metadata is via SOAP... you can't do much via REST.
+            // There probably soap clients that could be used... but I'm just going to do
+            // raw fetch requests for this.    For now this is just hard coding what metadata to request.
+            // nothing handles the response yet.
+            const _body = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:met="http://soap.sforce.com/2006/04/metadata">
+                            <soapenv:Header>
+                            <met:CallOptions>
+                                <met:client>${window.$DewwowExt.CLIENT_ID}</met:client>
+                            </met:CallOptions>
+                            <met:SessionHeader>
+                                <met:sessionId>${sessionId}</met:sessionId>
+                            </met:SessionHeader>
+                            </soapenv:Header>
+                            <soapenv:Body>
+                            <met:checkRetrieveStatus>
+                                <met:asyncProcessId>${asyncProcessId}</met:asyncProcessId>
+                                <met:includeZip>${includeZip}</met:includeZip>
+                            </met:checkRetrieveStatus>
+                            </soapenv:Body>
+                        </soapenv:Envelope>`;
+         
+            fetch(_url, {
+                method: 'POST',
+                headers: {
+                    'SOAPAction':'checkRetrieveStatus',
+                    'Content-Type': 'text/xml'
+                },
+                body: _body
+            }).then(function (response){
+                response.text().then(function (data){
+                    // Chrome extensions with manifest 3 no longer have an XML parser.  I could try to 
+                    // find some 3rd party library to parse it, but instead I'll just pass it back.
+                    // We'll just pass the raw xml back to the caller and let them parse it in the browser.
                     callback( { status: response.status, data: data  });
                 });
                 
             });
 
         }
+
+        
 
     };
 })();
