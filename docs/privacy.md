@@ -1,4 +1,8 @@
-## Privacy
+---
+layout: default
+title: Dewwow Extension Privacy
+---
+## Privacy Statement
 
 The Dewwow Chrome Extension for Salesforce does not make any calls to any Dewwow servers.  The only calls it makes are to Salesforce servers to make API calls to fetch data. 
 
