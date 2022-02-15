@@ -1,1 +1,3 @@
-# Sample Chrome Extension to interact with Salesforce
+# dewwowext 
+
+A chrome extension to help Salesforce Admins, Developers, and Consultants.
