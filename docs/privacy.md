@@ -1,9 +1,3 @@
----
-layout: page
-title: Privacy
-permalink: /privacy/
----
-
 ## Privacy
 
 1.  We do not collect any private information.
