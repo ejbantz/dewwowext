@@ -14,10 +14,10 @@
             UNZIP: 'UNZIP'
         },
 
-        //main Salesforce API level
+        // main Salesforce API level
         API_LEVEL: '52.0',
         
-        //client ID from Salesforce connected app
+        // client ID from Salesforce connected app
         CLIENT_ID: 'YOUR-CLIENT-ID-HERE',
 
         isLightningExperience: function(url){

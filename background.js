@@ -109,7 +109,7 @@ function addMainMenuToSalesforcePage(menuId) {
     // Here's what it's doing...
     //   1. Get the objects in the org via REST. 
     //   2. Submit a metadata API retrieve call via SOAP. 
-    //   3. Check the status of the retrive call via SOAP.
+    //   3. Check the status of the retrie800ve call via SOAP.
     //   4. Decode/Unzip the zipfile received. 
     //   5. Loop the data a build single object.
     //   6. Output the single object as an html table.  
