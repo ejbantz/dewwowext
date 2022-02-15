@@ -12,3 +12,5 @@ description: Free Chrome Extension to help Salesforce Consultants
       Background.js-->sf(Salesforce Page);
       sf(Salesforce Page)-->Background.js;
 ```
+
+![Chart](./test.svg)
