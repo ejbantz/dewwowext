@@ -10,3 +10,6 @@ This free extension's goal is to help Salesforce Admins, Developers, and Consult
 ### Support or Contact
 
 Having trouble with extension or have an idea? Reach out to [EJ Bantz on LinkedIn](https://www.linkedin.com/in/ejbantz/).
+
+### Privacy Statement
+We don't collect or share any information.  [Privacy Statement](https://ejbantz.github.io/dewwowext/privacy)
