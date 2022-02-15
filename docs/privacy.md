@@ -1,6 +1,7 @@
 ---
 layout: default
-title: Dewwow Extension Privacy
+title: Dewwow Extension
+description: Free Chrome Extension to help Salesforce Consultants
 ---
 ## Privacy Statement
 
