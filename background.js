@@ -62,10 +62,11 @@ function addMainMenuToSalesforcePage(menuId) {
     var content = document.createElement('div');
     content.innerHTML = (`
     <div id="myModal" class="dewwowext-modal">
-    <div id="dewwowext-button-fls" class="dewwowext-button">Fetch Field Security</div>
-    <div id="dewwowext-button-get-objects" class="dewwowext-button">Get Objects</div>
-    <div class="dewwowext-modal-content"></div>
-      <div class="dewwowext-modal-close-button">[X]</div>
+      <div id="dewwowext-button-fls" class="dewwowext-button">Fetch Field Security</div>
+      <div id="dewwowext-button-get-objects" class="dewwowext-button">Get Objects</div>
+      <div id="dewwowext-button-copy" class="dewwowext-button">Copy Result</div>
+      <div id="dewwowext-modal-content" class="dewwowext-modal-content"></div>
+      <div id="dewwowext-modal-close-button" class="dewwowext-modal-close-button">[X]</div>
     </div>`);
     dewwowMenu.appendChild(content);
 
@@ -84,6 +85,21 @@ function addMainMenuToSalesforcePage(menuId) {
         // running background.js.  
       });
     }
+
+    // Demonstrating putting something into the cliipboard.
+    var copyButton = document.querySelector('#dewwowext-button-copy');
+    copyButton.addEventListener('click', function(e) {
+
+      try {
+        const content = document.querySelector('#dewwowext-modal-content').innerHTML;
+        const blob = new Blob([content], {type: 'text/html'});
+        const item = new ClipboardItem({'text/html' : blob});
+        navigator.clipboard.write([item]);
+      } catch(e) {
+        console.log(e);
+      }
+
+    });
 
 
     // Demonstrating getting data via test.  Not really doing anything productive with the data yet.

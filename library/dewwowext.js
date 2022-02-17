@@ -18,7 +18,9 @@
         API_LEVEL: '52.0',
         
         // client ID from Salesforce connected app
-        CLIENT_ID: 'YOUR-CLIENT-ID-HERE',
+        // I'm going to leave the Dewwow client id in here.  It's not really a secret.  
+        // Just be sure to replace this with your client id if you make your own project.
+        CLIENT_ID: '3MVG9_XwsqeYoueKDRBG0kJG7O0dUEs47jut8RoV4MATcOBjSbQiBMgzHvbtYRjUgRzqfGslLUjWZF6LECm0l',
 
         isLightningExperience: function(url){
             if (url) {
