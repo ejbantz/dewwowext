@@ -17,3 +17,5 @@ Having trouble with extension or have an idea? Reach out to [EJ Bantz on LinkedI
 
 ### Privacy Statement
 We don't collect or share any information.  [Privacy Statement](https://ejbantz.github.io/dewwowext/privacy)
+
+[![AvailableInChromeStore](./AvailableInChromeStore.png)](https://chrome.google.com/webstore/detail/dewwow/miigmhdkhafhimciejjcogbnlgjiacpe)
