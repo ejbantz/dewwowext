@@ -56,8 +56,12 @@ function addMainMenuToSalesforcePage(menuId) {
     // the div id should be more of random thing... or make use the exensions unique id.
     dewwowMenu = document.createElement('div');
     dewwowMenu.id = menuId;
-    dewwowMenu.className = 'dewwowext-menu slds-global-actions__item slds-dropdown-trigger slds-dropdown-trigger--click';
-    
+    dewwowMenu.className = 'dewwowext-menu';
+
+    // Add the menu to the screen. 
+    var body = document.getElementsByTagName('body')[0];
+    body.appendChild(dewwowMenu);
+
 
     var content = document.createElement('div');
     content.innerHTML = (`
@@ -70,21 +74,16 @@ function addMainMenuToSalesforcePage(menuId) {
     </div>`);
     dewwowMenu.appendChild(content);
 
-    // This adds an item to the global actions in the upper right corner.
-    var parent = document.getElementsByClassName('slds-global-actions')[0];
-    if (parent) {
-      parent.appendChild(dewwowMenu);
-      parent.appendChild(content);
 
-      // Add a handler so we can do things when the user clicks the UI we added. 
-      dewwowMenu.addEventListener('click', function(e) {
-        var modal = document.querySelector('.dewwowext-modal');
-        modal.classList.toggle('dewwowext-modal-open');
-        // $DewwowExt is available because it was also injected.  Just keep in mind
-        // the instance of $DewwowExt is a different instance that is alive within the 
-        // running background.js.  
-      });
-    }
+    // Add a handler so we can do things when the user clicks the UI we added. 
+    dewwowMenu.addEventListener('click', function(e) {
+      var modal = document.querySelector('.dewwowext-modal');
+      modal.classList.add('dewwowext-modal-open');
+      // $DewwowExt is available because it was also injected.  Just keep in mind
+      // the instance of $DewwowExt is a different instance that is alive within the 
+      // running background.js.  
+    });
+  
 
     // Demonstrating putting something into the cliipboard.
     var copyButton = document.querySelector('#dewwowext-button-copy');
@@ -285,8 +284,9 @@ function addMainMenuToSalesforcePage(menuId) {
 
     var closeButton = document.querySelector('.dewwowext-modal-close-button');
     closeButton.addEventListener('click', function(e){
+      e.stopPropagation(); // block the container from getting this click event too.
       var modal = document.querySelector('.dewwowext-modal');
-      modal.classList.toggle('dewwowext-modal-open');
+      modal.classList.remove('dewwowext-modal-open');
     })
 
   }
