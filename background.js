@@ -66,10 +66,29 @@ function addMainMenuToSalesforcePage(menuId) {
     var content = document.createElement('div');
     content.innerHTML = (`
     <div id="myModal" class="dewwowext-modal">
-      <div id="dewwowext-button-fls"          class="slds-button  slds-button_brand">Fetch Field Security</div>
-      <div id="dewwowext-button-get-objects"  class="slds-button  slds-button_brand">Get Objects</div>
-      <div id="dewwowext-button-copy"         class="slds-button  slds-button_brand">Copy Result</div>
-      <div id="dewwowext-modal-content"       class="dewwowext-modal-content"></div>
+    
+    <div class="slds-tabs_default">
+      <ul class="slds-tabs_default__nav" role="tablist">
+        <li class="slds-tabs_default__item slds-active" title="Item One" role="presentation">
+          <a class="slds-tabs_default__link" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-default-1" id="tab-default-1__item">Field Security</a>
+        </li>
+        <li class="slds-tabs_default__item" title="Item Two" role="presentation">
+          <a class="slds-tabs_default__link" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-2" id="tab-default-2__item">Object List</a>
+        </li>
+      </ul>
+      <div id="tab-default-1" class="slds-tabs_default__content slds-show" role="tabpanel" aria-labelledby="tab-default-1__item">
+        <div id="dewwowext-button-fls"          class="slds-button  slds-button_brand">Start Compare</div>
+        <div id="dewwowext-button-fls-copy"         class="slds-button  slds-button_brand">Copy</div>
+        <div id="dewwowext-content-fls"       class="dewwowext-modal-content"></div>
+        </div>
+      <div id="tab-default-2" class="slds-tabs_default__content slds-hide" role="tabpanel" aria-labelledby="tab-default-2__item">
+        <div id="dewwowext-button-get-objects"  class="slds-button  slds-button_brand">Get Object List</div>
+        <div id="dewwowext-content-objectlist"       class="dewwowext-modal-content"></div>
+        <div id="dewwowext-button-objectlist-copy"         class="slds-button  slds-button_brand">Copy</div>
+        </div>
+    </div>
+
+      
       <div id="dewwowext-modal-close-button"  class="dewwowext-modal-close-button">
         <svg class="slds-icon slds-icon-text-default" aria-hidden="true">
           <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close"></use>
@@ -88,13 +107,33 @@ function addMainMenuToSalesforcePage(menuId) {
       // running background.js.  
     });
   
+    // Handle when the user clicks a tab.
+    document.querySelectorAll('.slds-tabs_default__link').forEach(item => {
+      item.addEventListener('click', event => {
+        $DewwowExt.sldsSwitchTab(event);
+      })
+    })
 
     // Demonstrating putting something into the cliipboard.
-    var copyButton = document.querySelector('#dewwowext-button-copy');
+    var copyButton = document.querySelector('#dewwowext-button-fls-copy');
     copyButton.addEventListener('click', function(e) {
 
       try {
-        const content = document.querySelector('#dewwowext-modal-content').innerHTML;
+        const content = document.querySelector('#dewwowext-content-fls').innerHTML;
+        const blob = new Blob([content], {type: 'text/html'});
+        const item = new ClipboardItem({'text/html' : blob});
+        navigator.clipboard.write([item]);
+      } catch(e) {
+        console.log(e);
+      }
+
+    });
+
+    copyButton = document.querySelector('#dewwowext-button-objectlist-copy');
+    copyButton.addEventListener('click', function(e) {
+
+      try {
+        const content = document.querySelector('#dewwowext-content-objectlist').innerHTML;
         const blob = new Blob([content], {type: 'text/html'});
         const item = new ClipboardItem({'text/html' : blob});
         navigator.clipboard.write([item]);
@@ -109,13 +148,11 @@ function addMainMenuToSalesforcePage(menuId) {
     var getObjectsButton = document.querySelector('#dewwowext-button-get-objects');
     if (getObjectsButton) {
       getObjectsButton.addEventListener('click', function(e) {
-        var modalcontent = document.querySelector('.dewwowext-modal-content');
+        var modalcontent = document.querySelector('#dewwowext-content-objectlist');
         modalcontent.innerText = 'Getting objects...';
         chrome.runtime.sendMessage({action: $DewwowExt.MESSAGES.GET_SESSION}, function(session) {
           $DewwowExt.getSobjects(session.domainAPI, session.sid, function(getObjectsResponse){
             // This is a describe of all the objects in the org.
-            var modalcontent = document.querySelector('.dewwowext-modal-content');
-            
             modalcontent.innerText = getObjectsResponse.data.sobjects.map(objectDescribe => {
               return objectDescribe.name;
             } ).join('\n');
@@ -135,7 +172,7 @@ function addMainMenuToSalesforcePage(menuId) {
     var flsButton = document.querySelector('#dewwowext-button-fls');
     if (flsButton) {
       flsButton.addEventListener('click', function(e) {
-        var modalcontent = document.querySelector('.dewwowext-modal-content');
+        var modalcontent = document.querySelector('#dewwowext-content-fls');
         modalcontent.innerText = 'Getting object list...';
         chrome.runtime.sendMessage({action: $DewwowExt.MESSAGES.GET_SESSION}, function(session) {
           $DewwowExt.getSobjects(session.domainAPI, session.sid, function(getObjectsResponse){
@@ -163,7 +200,6 @@ function addMainMenuToSalesforcePage(menuId) {
                  var idNode = resultNode.getElementsByTagName('id')[0];
                  var metadataRetrieveJobId = idNode.innerHTML;
  
-                 var modalcontent = document.querySelector('.dewwowext-modal-content');
                  modalcontent.innerText = `Job id from the retrieve is ${metadataRetrieveJobId}.  Fetching in 5 seconds.`;
 
                  var attemptCounter = 0;
