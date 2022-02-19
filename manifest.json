@@ -1,7 +1,7 @@
 {
     "name": "Dewwow for Salesforce",
     "description": "Helps Admins, Developers, and Consultants with Salesforce",
-    "version": "0.0.0.2",
+    "version": "0.0.0.3",
     "manifest_version": 3,
     "options_page": "options.html",
     "background": {
