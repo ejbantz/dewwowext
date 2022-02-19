@@ -258,9 +258,34 @@
                 
             });
 
-        }
+        },
 
-        
+        sldsSwitchTab: function (event, item){
+            // https://www.lightningdesignsystem.com/components/tabs/
+            let target = event.target;
+            let id = target.id;
+            let contentIdToShow = id.replace('__item', '');
+
+            // The .slds-active class should be placed on the li with .slds-tabs_{variant}__item.
+            let li = target.parentNode;
+            let ul = li.parentNode;
+            ul.querySelectorAll('.slds-active').forEach(item => {
+                item.classList.remove('slds-active');
+            });
+            li.classList.add('slds-active');
+
+            // The corresponding .slds-tabs_{variant}__content container receives .slds-show.
+            let div = ul.parentNode;
+            div.querySelectorAll('.slds-tabs_default__content').forEach(item => {
+                if (item.id === contentIdToShow) {
+                    item.classList.add('slds-show');
+                    item.classList.remove('slds-hide');
+                } else {
+                    item.classList.add('slds-hide');
+                    item.classList.remove('slds-show');
+                }
+            });            
+        }
 
     };
 })();
