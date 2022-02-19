@@ -8,6 +8,11 @@ This free extension's goal is to help Salesforce Admins, Developers, and Consult
 
 ### Features
 
+ - 0.0.0.3
+   - Moved icon into the right side of the screen.
+   - Added tabs to break up functional parts.
+   - Starting to use Lightning Design System for UI elements.
+   - Updated popup panel content.
  - 0.0.0.2
    - Copy Result to clipboard so you can paste into Excel.
  - 0.0.0.1
