@@ -66,11 +66,15 @@ function addMainMenuToSalesforcePage(menuId) {
     var content = document.createElement('div');
     content.innerHTML = (`
     <div id="myModal" class="dewwowext-modal">
-      <div id="dewwowext-button-fls" class="dewwowext-button">Fetch Field Security</div>
-      <div id="dewwowext-button-get-objects" class="dewwowext-button">Get Objects</div>
-      <div id="dewwowext-button-copy" class="dewwowext-button">Copy Result</div>
-      <div id="dewwowext-modal-content" class="dewwowext-modal-content"></div>
-      <div id="dewwowext-modal-close-button" class="dewwowext-modal-close-button">[X]</div>
+      <div id="dewwowext-button-fls"          class="slds-button  slds-button_brand">Fetch Field Security</div>
+      <div id="dewwowext-button-get-objects"  class="slds-button  slds-button_brand">Get Objects</div>
+      <div id="dewwowext-button-copy"         class="slds-button  slds-button_brand">Copy Result</div>
+      <div id="dewwowext-modal-content"       class="dewwowext-modal-content"></div>
+      <div id="dewwowext-modal-close-button"  class="dewwowext-modal-close-button">
+        <svg class="slds-icon slds-icon-text-default" aria-hidden="true">
+          <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close"></use>
+        </svg>
+      </div>
     </div>`);
     dewwowMenu.appendChild(content);
 
@@ -282,7 +286,7 @@ function addMainMenuToSalesforcePage(menuId) {
       });
     }
 
-    var closeButton = document.querySelector('.dewwowext-modal-close-button');
+    var closeButton = document.querySelector('#dewwowext-modal-close-button');
     closeButton.addEventListener('click', function(e){
       e.stopPropagation(); // block the container from getting this click event too.
       var modal = document.querySelector('.dewwowext-modal');
