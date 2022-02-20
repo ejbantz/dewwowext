@@ -8,6 +8,11 @@ This free extension's goal is to help Salesforce Admins, Developers, and Consult
 
 ### Features
 
+ - 0.0.0.4
+   - Profiles can be selected.
+   - Objects can be selected.
+   - Object Permissions are also compared.
+   - Using more Lightning Design System for UI elements. 
  - 0.0.0.3
    - Moved icon into the right side of the screen.
    - Added tabs to break up functional parts.
